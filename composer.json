@@ -1,0 +1,66 @@
+{
+    "name": "colinodell/indentation",
+    "type": "library",
+    "description": "Library to detect and manipulate indentation in strings and files",
+    "keywords": ["indentation","indent","deindent","tabs","spaces","strings","files"],
+    "homepage": "https://github.com/colinodell/indentation",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Colin O'Dell",
+            "email": "colinodell@gmail.com",
+            "homepage": "https://www.colinodell.com",
+            "role": "Lead Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/colinodell/indentation/issues",
+        "rss": "https://github.com/colinodell/indentation/releases.atom",
+        "source": "https://github.com/colinodell/indentation"
+    },
+    "require": {
+        "php": "^8.0"
+    },
+    "require-dev": {
+        "ext-json": "*",
+        "phpstan/phpstan": "^1.0.0",
+        "phpunit/phpunit": "^9.5.5",
+        "scrutinizer/ocular": "^1.8.1",
+        "unleashedtech/php-coding-standard": "^3.1",
+        "vimeo/psalm": "^4.7.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "ColinODell\\Indentation\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ColinODell\\Indentation\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "phpcs": "phpcs",
+        "phpstan": "phpstan analyse",
+        "phpunit": "phpunit --no-coverage",
+        "psalm": "psalm --stats",
+        "test": [
+            "@phpcs",
+            "@phpstan",
+            "@psalm",
+            "@phpunit"
+        ]
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "1.0-dev"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        },
+        "sort-packages": true
+    }
+}

@@ -1,0 +1,20 @@
+; top-most EditorConfig file
+root = true
+
+# All files.
+[*]
+end_of_line = LF
+indent_style = space
+indent_size = 4
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+# Ignore tests/fixtures
+[/tests/fixtures/**]
+charset = unset
+end_of_line = unset
+insert_final_newline = unset
+trim_trailing_whitespace = unset
+indent_style = unset
+indent_size = unset
