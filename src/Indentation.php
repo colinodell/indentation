@@ -7,7 +7,7 @@ declare(strict_types=1);
  *
  * (c) Colin O'Dell <colinodell@gmail.com>
  *
- * Forked from detect-indent,
+ * detect() method forked from detect-indent,
  * (c) Sindre Sorhus <sindresorhus@gmail.com> (https://sindresorhus.com)
  *
  * For the full copyright and license information, please view the LICENSE
@@ -82,6 +82,9 @@ final class Indentation
         return new self($amount, $type);
     }
 
+    /**
+     * Change the indentation from one style to another
+     */
     public static function change(string $string, Indentation $newStyle): string
     {
         $oldStyle = self::detect($string);
