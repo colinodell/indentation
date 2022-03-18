@@ -124,6 +124,60 @@ final class Indentation
     }
 
     /**
+     * Adds the given $indentation to the beginning of each line in the given $string
+     *
+     * @throws \InvalidArgumentException if $indentation type is not spaces or tabs
+     */
+    public static function indent(string $string, Indentation $indentation): string
+    {
+        $toAdd = (string) $indentation;
+
+        $result = \preg_replace('/^(?=.)/m', $toAdd, $string);
+        if ($result === null) {
+            return $string;
+        }
+
+        return $result;
+    }
+
+    /**
+     * De-indent the given string, removing any leading indentation that is common to all lines.
+     */
+    public static function unindent(string $string): string
+    {
+        $leadingIndent     = PHP_INT_MAX;
+        $leadingIndentType = self::TYPE_UNKNOWN;
+        foreach (self::iterateLines($string) as $indentation) {
+            // Any lines with no leading indentation means we can't trim the entire string
+            if ($indentation === null) {
+                return $string;
+            }
+
+            $leadingIndent = \min($leadingIndent, $indentation[0]);
+            if ($leadingIndentType === self::TYPE_UNKNOWN) {
+                $leadingIndentType = $indentation[1];
+            } elseif ($leadingIndentType !== $indentation[1]) {
+                // Don't trim if the leading indent types are different
+                return $string;
+            }
+        }
+
+        // Don't trim if there's no leading indents or if the types are inconsistent
+        if ($leadingIndent === 0 || $leadingIndent === PHP_INT_MAX || $leadingIndentType === self::TYPE_UNKNOWN) {
+            return $string;
+        }
+
+        $leadingIndent = new Indentation($leadingIndent, $leadingIndentType);
+
+        $trimmed = \preg_replace('/^' . \preg_quote((string) $leadingIndent, '/') . '/m', '', $string);
+        if (! \is_string($trimmed)) {
+            return $string;
+        }
+
+        return $trimmed;
+    }
+
+    /**
      * @return array<string, array{0: int, 1: int}>
      */
     private static function makeIndentsMap(string $string, bool $ignoreSingleSpaces): array
