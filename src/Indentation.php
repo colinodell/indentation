@@ -22,12 +22,14 @@ final class Indentation
     public const TYPE_TAB     = 'tab';
     public const TYPE_UNKNOWN = 'unknown';
 
+    /** @var int<0, max> */
     public int $amount;
 
     /** @var self::TYPE_* */
     public string $type;
 
     /**
+     * @param int<0, max>  $amount
      * @param self::TYPE_* $type
      */
     public function __construct(int $amount, string $type)
@@ -36,6 +38,9 @@ final class Indentation
         $this->type   = $type;
     }
 
+    /**
+     * @return int<0, max>
+     */
     public function getAmount(): int
     {
         return $this->amount;
@@ -79,7 +84,7 @@ final class Indentation
 
         [$amount, $type] = self::decodeIndentsKey($keyOfMostUsedIndent);
 
-        return new self($amount, $type);
+        return new self(\max(0, $amount), $type);
     }
 
     /**
@@ -189,6 +194,8 @@ final class Indentation
 
     /**
      * Encode the indent type and amount as a string (e.g. 's4') for use as a compound key in the indents map.
+     *
+     * @param self::TYPE_* $indentType
      */
     private static function encodeIndentsKey(string $indentType, int $indentAmount): string
     {
