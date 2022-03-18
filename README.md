@@ -37,7 +37,7 @@ assert((string)$indentation === '    ');
 use ColinODell\Indentation\Indentation;
 
 $composerJson = file_get_contents('composer.json');
-$composerJson = Indentation::change($composerJson, new Indentation(Indentation::TYPE_TAB, 1));
+$composerJson = Indentation::change($composerJson, new Indentation(1, Indentation::TYPE_TAB));
 file_put_contents('composer.json', $composerJson);
 ```
 
