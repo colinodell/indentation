@@ -137,26 +137,15 @@ final class Indentation
         // Indents key (ident type + size of the indents/unindents)
         $key = null;
 
-        $lines = \preg_split('/\R/', $string);
-        if ($lines === false) {
-            throw new \InvalidArgumentException('Invalid string');
-        }
-
-        foreach ($lines as $line) {
-            if ($line === '') {
-                // Ignore empty lines
-                continue;
-            }
-
+        foreach (self::iterateLines($string) as $indentation) {
             // Detect either spaces or tabs but not both to properly handle tabs for indentation and spaces for alignment
-            if (\preg_match('/^(?:( )+|\t+)/', $line, $matches) !== 1) {
+            if ($indentation === null) {
                 $previousSize       = 0;
                 $previousIndentType = '';
                 continue;
             }
 
-            $indent     = \strlen($matches[0]);
-            $indentType = isset($matches[1]) ? self::TYPE_SPACE : self::TYPE_TAB;
+            [$indent, $indentType] = $indentation;
             // Ignore single space unless it's the only indent detected to prevent common false positives
             if ($ignoreSingleSpaces && $indentType === self::TYPE_SPACE && $indent === 1) {
                 continue;
@@ -190,6 +179,36 @@ final class Indentation
         }
 
         return $indents;
+    }
+
+    /**
+     * @return iterable<int, array{0: int<0, max>, 1: self::TYPE_*}|null>
+     */
+    private static function iterateLines(string $string): iterable
+    {
+        $lines = \preg_split('/\R/', $string);
+        if ($lines === false) {
+            throw new \InvalidArgumentException('Invalid string');
+        }
+
+        foreach ($lines as $i => $line) {
+            if ($line === '') {
+                // Ignore empty lines
+                continue;
+            }
+
+            // Detect either spaces or tabs but not both to properly handle tabs for indentation and spaces for alignment
+            if (\preg_match('/^(?:( )+|\t+)/', $line, $matches) !== 1) {
+                yield $i => null;
+
+                continue;
+            }
+
+            $indent     = \strlen($matches[0]);
+            $indentType = isset($matches[1]) ? self::TYPE_SPACE : self::TYPE_TAB;
+
+            yield $i => [$indent, $indentType];
+        }
     }
 
     /**
