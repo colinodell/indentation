@@ -4,6 +4,8 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 
 ## [Unreleased][unreleased]
 
+## [1.0.0] - 2022-03-20
+
 ### Added
 
  - Added `indent()` and `unindent()` methods to manage leading whitespace.
@@ -12,5 +14,6 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 
 **Initial release!**
 
-[unreleased]: https://github.com/colinodell/indentation/compare/v0.1.0...main
+[unreleased]: https://github.com/colinodell/indentation/compare/v1.0.0...main
+[1.0.0]: https://github.com/colinodell/indentation/compare/v0.1.0...v1.0.0
 [0.1.0]: https://github.com/colinodell/indentation/releases/tag/v0.1.0
