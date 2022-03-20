@@ -69,7 +69,7 @@ Imagine you have a file where every line is indented by at least 4 spaces:
     }
 ```
 
-You can trim that leading indentation while preserving the nested indentation with the `trim()` method:
+You can trim that leading indentation while preserving the nested indentation with the `unindent()` method:
 
 ```php
 use ColinODell\Indentation\Indentation;
