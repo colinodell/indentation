@@ -193,6 +193,192 @@ final class IndentationTest extends TestCase
         ];
     }
 
+    /**
+     * @dataProvider provideCasesForTestIndent
+     */
+    public function testIndent(string $input, Indentation $indentation, string $expected): void
+    {
+        $actual = Indentation::indent($input, $indentation);
+        self::assertSame($expected, $actual);
+    }
+
+    /**
+     * @return iterable<array<mixed>>
+     */
+    public function provideCasesForTestIndent(): iterable
+    {
+        yield 'Empty string' => [
+            '',
+            new Indentation(4, Indentation::TYPE_SPACE),
+            '',
+        ];
+
+        yield 'No indentation' => [
+            '<ul></ul>',
+            new Indentation(0, Indentation::TYPE_SPACE),
+            '<ul></ul>',
+        ];
+
+        yield 'Unknown indentation' => [
+            '<ul></ul>',
+            new Indentation(4, Indentation::TYPE_UNKNOWN),
+            '<ul></ul>',
+        ];
+
+        yield 'Add two spaces' => [
+            "<ul>\n\n  <li>yay</li>\n\n</ul>\n",
+            new Indentation(2, Indentation::TYPE_SPACE),
+            "  <ul>\n\n    <li>yay</li>\n\n  </ul>\n",
+        ];
+
+        yield 'Add four spaces' => [
+            "<ul>\n\n  <li>yay</li>\n\n</ul>\n",
+            new Indentation(4, Indentation::TYPE_SPACE),
+            "    <ul>\n\n      <li>yay</li>\n\n    </ul>\n",
+        ];
+
+        yield 'Add one tab' => [
+            "<ul>\n\n  <li>yay</li>\n\n</ul>\n",
+            new Indentation(1, Indentation::TYPE_TAB),
+            "\t<ul>\n\n\t  <li>yay</li>\n\n\t</ul>\n",
+        ];
+    }
+
+    /**
+     * @dataProvider provideCasesForTestUnindent
+     */
+    public function testUnindent(string $input, string $expected): void
+    {
+        $actual = Indentation::unindent($input);
+        self::assertSame($expected, $actual);
+    }
+
+    /**
+     * @return iterable<array<mixed>>
+     */
+    public function provideCasesForTestUnindent(): iterable
+    {
+        yield 'Empty string' => [
+            '',
+            '',
+        ];
+
+        yield 'No indentation' => [
+            '<ul></ul>',
+            '<ul></ul>',
+        ];
+
+        yield 'All lines have 1 leading space' => [
+            " Hello\n\n World\n",
+            "Hello\n\nWorld\n",
+        ];
+
+        yield 'All lines have 2 leading spaces' => [
+            "  Hello\n\n  World\n",
+            "Hello\n\nWorld\n",
+        ];
+
+        yield 'All lines have 1 leading tab' => [
+            "\tHello\n\n\tWorld\n",
+            "Hello\n\nWorld\n",
+        ];
+
+        yield 'All lines have 2 leading tabs' => [
+            "\t\tHello\n\n\t\tWorld\n",
+            "Hello\n\nWorld\n",
+        ];
+
+        yield 'Only trim first two spaces' => [
+            "  <ul>\n    <li>yay</li>\n  </ul>\n",
+            "<ul>\n  <li>yay</li>\n</ul>\n",
+        ];
+
+        yield 'Leading indent of 4 spaces + lots of 2-space-indented contents' => [
+            <<<INPUT
+    <ul>
+      <li>
+        This content
+        is indented
+        by 2 spaces.
+      </li>
+      <li>
+        But the entire
+        code block
+        has an extra
+        4 spaces of indentation
+        that we should strip.
+      </li>
+    </ul>
+INPUT,
+            <<<EXPECTED
+<ul>
+  <li>
+    This content
+    is indented
+    by 2 spaces.
+  </li>
+  <li>
+    But the entire
+    code block
+    has an extra
+    4 spaces of indentation
+    that we should strip.
+  </li>
+</ul>
+EXPECTED,
+        ];
+
+        yield 'Leading indent of 5 spaces + lots of 2-space-indented contents' => [
+            <<<INPUT
+     <ul>
+       <li>
+         This content
+         is indented
+         by 2 spaces.
+       </li>
+       <li>
+         But the entire
+         code block
+         has an extra
+         5 spaces of indentation
+         that we should strip.
+       </li>
+     </ul>
+INPUT,
+            <<<EXPECTED
+<ul>
+  <li>
+    This content
+    is indented
+    by 2 spaces.
+  </li>
+  <li>
+    But the entire
+    code block
+    has an extra
+    5 spaces of indentation
+    that we should strip.
+  </li>
+</ul>
+EXPECTED,
+        ];
+
+        yield 'Single leading space with multi-line code comments' => [
+            " /**\n  * Test\n  */\n",
+            "/**\n * Test\n */\n",
+        ];
+
+        yield 'Mixed leading indentation (tabs then spaces)' => [
+            "\tHello\n  World!\n",
+            "\tHello\n  World!\n",
+        ];
+
+        yield 'Mixed leading indentation (spaces then tabs)' => [
+            "  Hello\n\tWorld!\n",
+            "  Hello\n\tWorld!\n",
+        ];
+    }
+
     private function loadFixture(string $filename): string
     {
         $fixture = \file_get_contents(__DIR__ . '/fixtures/' . $filename);

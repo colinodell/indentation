@@ -41,6 +41,58 @@ $composerJson = Indentation::change($composerJson, new Indentation(1, Indentatio
 file_put_contents('composer.json', $composerJson);
 ```
 
+### Adding leading indentation to all lines
+
+Need to add indent all lines by some amount?
+
+```php
+use ColinODell\Indentation\Indentation;
+
+$codeExample = file_get_contents('file.php');
+$indented = Indentation::indent($codeExample, new Indentation(4, Indentation::TYPE_SPACE));
+```
+
+Now you can embed the [indented code](https://spec.commonmark.org/0.30/#indented-code-blocks) into a Markdown document!
+(Hint: This works great with the [league/commonmark](https://commonmark.thephpleague.com/) library.)
+
+### Removing leading indentation from all lines
+
+Imagine you have a file where every line is indented by at least 4 spaces:
+
+```
+    /**
+     * Just a silly example
+     */
+    class Cat extends Animal
+    {
+        // ...
+    }
+```
+
+You can trim that leading indentation while preserving the nested indentation with the `trim()` method:
+
+```php
+use ColinODell\Indentation\Indentation;
+
+$contents = file_get_contents('Cat.php');
+$trimmed = Indentation::unindent($contents);
+file_put_contents('Cat.php', $trimmed);
+```
+
+Giving you:
+
+```
+/**
+ * Just a silly example
+ */
+class Cat extends Animal
+{
+    // ...
+}
+```
+
+Note how the leading 4 spaces are removed but all other indentation (like in the docblock and method body) is preserved.
+
 ## Detection Algorithm
 
 The current algorithm looks for the most common difference between two consecutive non-empty lines.

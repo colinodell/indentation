@@ -4,6 +4,10 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 
 ## [Unreleased][unreleased]
 
+### Added
+
+ - Added `indent()` and `unindent()` methods to manage leading whitespace.
+
 ## [0.1.0] - 2022-03-16
 
 **Initial release!**
