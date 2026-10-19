@@ -23,7 +23,7 @@
     },
     "require-dev": {
         "ext-json": "*",
-        "phpstan/phpstan": "^1.0.0",
+        "phpstan/phpstan": "^1.0.0 || ^2.0.0",
         "phpunit/phpunit": "^9.5.5",
         "scrutinizer/ocular": "^1.8.1",
         "unleashedtech/php-coding-standard": "^3.1",
